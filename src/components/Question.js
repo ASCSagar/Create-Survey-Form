@@ -1,4 +1,3 @@
-// src/components/Question.js
 import React from 'react';
 import { Trash2, Menu } from 'lucide-react';
 import { useFormBuilder } from '../hooks/useFormBuilder';
@@ -39,7 +38,7 @@ const Question = ({ question }) => {
       return (
         <div className="mt-4">
           {question.options.map((option, index) => (
-            <div key={index} className="flex items-center mb-2">
+            <div key={index} className="flex items-center w-full mb-2">
               <input
                 type={
                   question.type === QuestionTypes.MULTIPLE_CHOICE
@@ -115,7 +114,7 @@ const Question = ({ question }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md relative group">
       <div className="flex justify-between items-start">
-        <div>
+        <div className="flex-1">
           <input
             className="text-lg font-medium w-full border-b border-gray-300 outline-none"
             value={question.text}

@@ -3,12 +3,45 @@ import { X } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import { useFormBuilder } from "../hooks/useFormBuilder";
+import { QuestionTypes } from "../utils/constants";
+
+const mapQuestionType = (type) => {
+  switch (type) {
+    case QuestionTypes.SHORT_ANSWER:
+      return "short_answer";
+    case QuestionTypes.PARAGRAPH:
+      return "paragraph";
+    case QuestionTypes.MULTIPLE_CHOICE:
+      return "multiple_choice";
+    case QuestionTypes.CHECKBOX:
+      return "checkbox";
+    case QuestionTypes.DROPDOWN:
+      return "dropdown";
+    default:
+      return "short_answer";
+  }
+};
 
 const PreviewModal = ({ onClose }) => {
-  const { survey, setSurvey, transformSurveyData } = useFormBuilder();
+  const { survey, setSurvey } = useFormBuilder();
+
+  const formData = {
+    title: survey.title,
+    description: survey.description,
+    is_public: survey.is_public,
+    questions: survey.questions.map((question, index) => ({
+      text: question.text,
+      question_type: mapQuestionType(question.type),
+      required: question.required,
+      order: index + 1,
+      choices: question.options.map((option, optIndex) => ({
+        text: option,
+        order: optIndex + 1,
+      })),
+    })),
+  }
 
   const handleSubmit = async () => {
-    const data = transformSurveyData();
     try {
       const response = await fetch("https://gazra.org/gazra/api/surveys/", {
         method: "POST",
@@ -16,7 +49,7 @@ const PreviewModal = ({ onClose }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
       if (response.status === 201) {
