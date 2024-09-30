@@ -14,41 +14,6 @@ export const FormBuilderProvider = ({ children }) => {
     questions: [],
   });
 
-  const mapQuestionType = (type) => {
-    switch (type) {
-      case QuestionTypes.SHORT_ANSWER:
-        return "short_answer";
-      case QuestionTypes.PARAGRAPH:
-        return "paragraph";
-      case QuestionTypes.MULTIPLE_CHOICE:
-        return "multiple_choice";
-      case QuestionTypes.CHECKBOX:
-        return "checkbox";
-      case QuestionTypes.DROPDOWN:
-        return "dropdown";
-      default:
-        return "short_answer";
-    }
-  };
-
-  const transformSurveyData = () => {
-    return {
-      title: survey.title,
-      description: survey.description,
-      is_public: survey.is_public,
-      questions: survey.questions.map((question, index) => ({
-        text: question.text,
-        question_type: mapQuestionType(question.type),
-        required: question.required,
-        order: index + 1,
-        choices: question.options.map((option, optIndex) => ({
-          text: option,
-          order: optIndex + 1,
-        })),
-      })),
-    };
-  };
-
   // Add a new question to the current survey
   const addQuestion = (type = QuestionTypes.SHORT_ANSWER) => {
     const newQuestion = {
@@ -118,7 +83,6 @@ export const FormBuilderProvider = ({ children }) => {
         updateQuestion,
         deleteQuestion,
         reorderQuestions,
-        transformSurveyData,
       }}
     >
       {children}
